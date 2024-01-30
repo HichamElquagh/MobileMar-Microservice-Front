@@ -1,4 +1,4 @@
-export interface FoodItems{
+export interface ProductItems{
     id : string
     name: string 
     image: string

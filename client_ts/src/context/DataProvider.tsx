@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import {FoodItems} from "../AppInterface"
+import {ProductItems} from "../AppInterface"
 export interface AppContext{
-    topRated: FoodItems[];
-    allCategories: FoodItems[];
-    productsNearYou: FoodItems[];
+    topRated: ProductItems[];
+    allCategories: ProductItems[];
+    productsNearYou: ProductItems[];
 }
 
 export interface AppState extends AppContext{
 
 }
 
-const DataContext = React.createContext<AppContext>({} as AppContext);
+export const DataContext = React.createContext<AppContext>({} as AppContext);
 
 function DataProvider({children}:{children: JSX.Element}) {
   const [state, setState] = useState<AppState>({
@@ -18,21 +18,21 @@ function DataProvider({children}:{children: JSX.Element}) {
         {
             id:"652ebe78352060965955z231",
             name: "iphone case",
-            image: "/assets/image1.jpg",
+            image: "src/assets/image1.jpg",
             price: 20,
             quantity: 50
         },
         {
             id:"652ebe78352060965955z231",
             name: "phone holder",
-            image: "/assets/image2.jpg",
+            image: "src/assets/image2.jpg",
             price: 80,
             quantity: 20
         },
         {
             id:"652ebe78352060965955z231",
-            name: "iphone case with stripe",
-            image: "/assets/image3.jpg",
+            name: "iphone case",
+            image: "src/assets/image4.jpg",
             price: 30,
             quantity: 40
         }
@@ -41,21 +41,21 @@ function DataProvider({children}:{children: JSX.Element}) {
         {
             id:"652ebe78352060965955z231",
             name: "iphone case",
-            image: "/assets/image1.jpg",
+            image: "src/assets/image1.jpg",
             price: 20,
             quantity: 50
         },
         {
             id:"652ebe78352060965955z231",
             name: "phone holder",
-            image: "/assets/image2.jpg",
+            image: "src/assets/image2.jpg",
             price: 80,
             quantity: 20
         },
         {
             id:"652ebe78352060965955z231",
-            name: "iphone case with stripe",
-            image: "/assets/image3.jpg",
+            name: "iphone case",
+            image: "src/assets/image4.jpg",
             price: 30,
             quantity: 40
         }
@@ -64,21 +64,21 @@ function DataProvider({children}:{children: JSX.Element}) {
         {
             id:"652ebe78352060965955z231",
             name: "iphone case",
-            image: "/assets/image1.jpg",
+            image: "src/assets/image1.jpg",
             price: 20,
             quantity: 50
         },
         {
             id:"652ebe78352060965955z231",
             name: "phone holder",
-            image: "/assets/image2.jpg",
+            image: "src/assets/image2.jpg",
             price: 80,
             quantity: 20
         },
         {
             id:"652ebe78352060965955z231",
-            name: "iphone case with stripe",
-            image: "/assets/image3.jpg",
+            name: "iphone case",
+            image: "src/assets/image4.jpg",
             price: 30,
             quantity: 40
         }
