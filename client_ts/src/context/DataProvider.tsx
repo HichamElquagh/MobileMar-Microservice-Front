@@ -1,163 +1,108 @@
 import React, { useState } from "react";
 import {ProductItems} from "../AppInterface"
+import axios from "axios";
+import { Items } from "../cartItems";
 
 interface AppState {
-    topRated: ProductItems[];
-    allCategories: ProductItems[];
-    productsNearYou: ProductItems[];
     cartItemCount: number;
     cartItems: ProductItems[];
 }
 
 interface AppContext extends AppState {
-    addToCart: (item: ProductItems) => void;
-    removeItem: (item: ProductItems) => void;
+    addToCart: (item: Items) => void;
+    removeItem: (item: Items) => void;
+    updateItem: (item: Items) => void;
+    getCartItems: () => void;
 }
 
 export const DataContext = React.createContext<AppContext>({} as AppContext);
 
 function DataProvider({children}:{children: JSX.Element}) {
   const [state, setState] = useState<AppState>({
-    topRated: [
-        {
-            id:"652ebe78352060965955z278",
-            name: "iphone case",
-            image: "src/assets/image1.jpg",
-            price: 20,
-            quantity: 50
-        },
-        {
-            id:"652ebe78352060965955z211",
-            name: "phone holder",
-            image: "src/assets/image2.jpg",
-            price: 80,
-            quantity: 20
-        },
-        {
-            id:"652ebe78352060965955z232",
-            name: "iphone case",
-            image: "src/assets/image4.jpg",
-            price: 30,
-            quantity: 40
-        }
-    ],
-    allCategories: [
-        {
-            id:"652ebe78352060965955z210",
-            name: "iphone case",
-            image: "src/assets/image1.jpg",
-            price: 20,
-            quantity: 50
-        },
-        {
-            id:"652ebe78352060965955z299",
-            name: "phone holder",
-            image: "src/assets/image2.jpg",
-            price: 80,
-            quantity: 20
-        },
-        {
-            id:"652ebe78352060965955z209",
-            name: "iphone case",
-            image: "src/assets/image4.jpg",
-            price: 30,
-            quantity: 40
-        }
-    ],
-    productsNearYou: [
-        {
-            id:"652ebe78352060965955z255",
-            name: "iphone case",
-            image: "src/assets/image1.jpg",
-            price: 20,
-            quantity: 50
-        },
-        {
-            id:"652ebe78352060965955z238",
-            name: "phone holder",
-            image: "src/assets/image2.jpg",
-            price: 80,
-            quantity: 20
-        },
-        {
-            id:"652ebe78352060965955z277",
-            name: "iphone case",
-            image: "src/assets/image4.jpg",
-            price: 30,
-            quantity: 40
-        }
-    ],
     cartItemCount: 0,
     cartItems: [],
   })
-  const { topRated, allCategories, productsNearYou, cartItemCount, cartItems } = state;
+  const { cartItemCount, cartItems } = state;
 
-  const addToCart = (item: ProductItems) => {
-    console.log(item);
-    const data = { ...item, quantity: 1 };
-    if (cartItems.length > 0) {
-      //  2 cases
-      const bool = cartItems.some((el) => el.id === item.id);
-      if (bool) {
-        const itemIndex = cartItems.findIndex((el) => el.id === item.id);
-        const c = [...state.cartItems];
-        if (c[itemIndex]["quantity"]) {
-          c[itemIndex]["quantity"]! += 1;
-        }
-        setState((prevState) => {
-          return { ...prevState, cartItems: c };
-        });
-      } else {
-        setState((prevState) => {
-          return { ...prevState, cartItems: [...state.cartItems, data] };
-        });
-      }
-    } else {
-      setState((prevState) => {
-        return { ...prevState, cartItems: [...state.cartItems, data] };
-      });
+  const addToCart = async (item: Items) => {
+    console.log(item._id);
+    try {
+    const cartItemData = {
+      cartId: "65af873474055693d7a2a658",
+      productId: item._id,
+      quantity: 1,
     }
-    setState((prevState) => {
-      return { ...prevState, cartItemCount: state.cartItemCount + 1 };
-    });
+
+      const response = await axios.post('http://localhost:3000/api/cartItems', cartItemData);
+      const data = response.data.cartItems;
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+    getCartItems()
   };
 
-  const removeItem = (item: ProductItems) => {
-    if (cartItems.length > 0) {
-      let bool = state.cartItems.some((i) => i.id === item.id);
-      if (bool) {
-        let itemIndex = state.cartItems.findIndex((el) => el.id === item.id);
-        const c = [...state.cartItems];
-        // if qty > 1 then reduce by 1 else we will be splicing
-        if (cartItems[itemIndex]["quantity"] === 1) {
-          c.splice(itemIndex, 1);
-          setState((prevState) => {
-            return { ...prevState, cartItems: c };
-          });
-        } else {
-          c[itemIndex]["quantity"]! -= 1;
-          setState((prevState) => {
-            return { ...prevState, cartItems: c };
-          });
-        }
-        if (cartItemCount !== 0) {
-          setState((prevState) => {
-            return { ...prevState, cartItemCount: state.cartItemCount - 1 };
-          });
-        }
+  const removeItem = async (item: Items) => {
+    console.log(item._id);
+    try {
+        const cartId = "65af873474055693d7a2a658";
+        const productId = item._id;
+
+        const response = await axios.delete(`http://localhost:3000/api/cartItems/${cartId}/${productId}`);
+        const data = response.data.cartItems;
+        console.log(data);
+      } catch (error) {
+        console.error(error);
       }
+      getCartItems()
+   
+  };
+
+  const updateItem = async (item: Items) => {
+    console.log(item._id);
+    try {
+      const cartItemData = {
+        cartId: "65af873474055693d7a2a658",
+        productId: item._id,
+        quantity: 1,
+      }
+  
+        const response = await axios.put('http://localhost:3000/api/cartItems', cartItemData);
+        const data = response.data;
+        console.log(data);
+      } catch (error) {
+        console.error(error);
+      }
+      getCartItems()
+   
+  };
+
+  const getCartItems = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/api/cartItems`);
+      const data = response.data.cartItems;
+      const count = data.length;
+      // console.log('hna',data);
+      setState((prevState) => {
+        return { ...prevState, cartItems: data };
+      });
+      setState((prevState) => {
+        return { ...prevState, cartItemCount: count };
+      });
+    } catch (error) {
+      console.error(error);
     }
   };
 
   return (
   <DataContext.Provider value={{
-    topRated, 
-    allCategories, 
-    productsNearYou,
+    // topRated, 
     cartItemCount,
     cartItems,
     addToCart,
     removeItem,
+    updateItem,
+    getCartItems,
     }}>
     {children}
     </DataContext.Provider>

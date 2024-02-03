@@ -1,18 +1,25 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import NavBar from "../layouts/NavBar";
 import { DataContext } from "../../context/DataProvider";
 import { ProductItems } from "../../AppInterface";
+import { Items } from "../../cartItems";
 
 function cart() {
-  const { cartItems, addToCart, removeItem } = useContext(DataContext);
+  const { cartItems, addToCart, removeItem, updateItem, getCartItems } = useContext(DataContext);
+  
 
   const totalPrice = () => {
     let price = 0;
     cartItems.forEach((elment) => {
-      price += elment.quantity! * elment.price;
+      price += elment.quantity * elment.productId?.price;
     });
     return price;
   };
+
+  useEffect(() => {
+    getCartItems();
+    totalPrice()
+  }, []);
 
   return (
     <>
@@ -24,6 +31,7 @@ function cart() {
             cartItems={cartItems}
             addToCart={addToCart}
             removeItem={removeItem}
+            updateItem={updateItem}
             totalPrice={totalPrice()}
           />
         ) : (
@@ -47,11 +55,13 @@ const CartWithItems = ({
   cartItems,
   addToCart,
   removeItem,
+  updateItem,
   totalPrice,
 }: {
   cartItems: ProductItems[];
-  addToCart: (item: ProductItems) => void;
-  removeItem: (item: ProductItems) => void;
+  addToCart: (item: Items) => void;
+  removeItem: (item: Items) => void;
+  updateItem: (item: Items) => void;
   totalPrice: number;
 }) => {
 
@@ -68,28 +78,37 @@ const CartWithItems = ({
               <div className="px-4 py-6 sm:px-8 sm:py-10">
                 <div className="flow-root">
                   <ul className="-my-8">
-                  {cartItems?.map((item: ProductItems, idx: number) => (
+                  {cartItems.map((item: ProductItems, idx: number) => (
                     <li  key={idx} className="flex flex-col space-y-3 py-3 text-left sm:flex-row sm:space-x-5 sm:space-y-0">
                       <div className="shrink-0 relative">
                         <span className="absolute top-1 left-1 flex h-6 w-6 items-center justify-center rounded-full border bg-white text-sm font-medium text-gray-500 shadow sm:-top-2 sm:-right-2">{item.quantity}</span>
-                        <img className="h-24 w-24 max-w-full rounded-lg object-cover" src={item.image} alt="" />
+                        <img className="h-24 w-24 max-w-full rounded-lg object-cover" src={item.productId?.image} alt="" />
                       </div>
-
+                        
                       <div className="relative flex flex-1 flex-col justify-between">
                         <div className="sm:col-gap-5 sm:grid sm:grid-cols-2">
                           <div className="pr-8 sm:pr-5">
-                            <p className="text-base font-semibold text-gray-900">{item.name}</p>
-                          </div>
+                            <p className="text-base font-semibold text-gray-900">{item.productId?.name}</p>
+                            <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 ">{item.quantity * item.productId?.price}.00 DH</p>
 
-                          <div className="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
-                            <p className="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">{item.quantity! * item.price}.00 DH</p>
+                          </div>
+                      
+                          <div className="mt-4  items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
+                            <div className="flex justify-end">
+                                  <button onClick={() => removeItem(item.productId)} type="button" className="flex rounded p-2 text-center text-gray-500 transition-all duration-200 ease-in-out focus:shadow hover:text-gray-900">
+                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-5 h-5">
+                                    <path d="M6 18 18 6M6 6l12 12" />
+                                  </svg>
+                                </button>
+                            </div>                          
                           </div>
                         </div>
+                        
 
                         <div className="items-center absolute top-0 right-0 flex sm:bottom-0 sm:top-auto">
-                          <button onClick={() => removeItem(item)} type="button" className="flex rounded p-2 text-center text-gray-500 transition-all duration-200 ease-in-out focus:shadow hover:text-gray-900">
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
+                          <button onClick={() => updateItem(item.productId)} type="button" className="flex rounded p-2 text-center text-gray-500 transition-all duration-200 ease-in-out focus:shadow hover:text-gray-900">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-5 h-5">
+                            <path d="M5 12h14" />
                           </svg>
                           </button>
 
@@ -97,9 +116,9 @@ const CartWithItems = ({
                           <p>{item.quantity}</p>
                           </button>
 
-                          <button onClick={() => addToCart(item)} type="button" className="flex rounded p-2 text-center text-gray-500 transition-all duration-200 ease-in-out focus:shadow hover:text-gray-900">
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                          <button onClick={() => addToCart(item.productId)} type="button" className="flex rounded p-2 text-center text-gray-500 transition-all duration-200 ease-in-out focus:shadow hover:text-gray-900">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-5 h-5">
+                            <path d="M12 4.5v15m7.5-7.5h-15" />
                           </svg>
                           </button>
                         </div>
@@ -127,8 +146,8 @@ const CartWithItems = ({
                 <div className="mt-4 text-center">
                   <button type="button" className="group inline-flex w-full items-center justify-center rounded-md bg-sky-600 px-3 py-3 text-lg font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800">
                     Place Order
-                    <svg xmlns="http://www.w3.org/2000/svg" className="group-hover:ml-8 ml-4 h-6 w-6 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    <svg xmlns="http://www.w3.org/2000/svg" className="group-hover:ml-8 ml-4 h-6 w-6 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
                   </button>
                 </div>
