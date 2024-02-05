@@ -12,7 +12,7 @@ const product = () => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await axios.get(`http://localhost:3000/api/product`);
+          const response = await axios.get(`http://localhost:3004/api/product`);
           // console.log(response.data.products);
           setProducts(response.data.products);
         } catch (error) {

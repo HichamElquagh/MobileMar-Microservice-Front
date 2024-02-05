@@ -33,7 +33,7 @@ function DataProvider({children}:{children: JSX.Element}) {
       quantity: 1,
     }
 
-      const response = await axios.post('http://localhost:3000/api/cartItems', cartItemData);
+      const response = await axios.post('http://localhost:3004/api/cartItems', cartItemData);
       const data = response.data.cartItems;
       console.log(data);
     } catch (error) {
@@ -48,7 +48,7 @@ function DataProvider({children}:{children: JSX.Element}) {
         const cartId = "65af873474055693d7a2a658";
         const productId = item._id;
 
-        const response = await axios.delete(`http://localhost:3000/api/cartItems/${cartId}/${productId}`);
+        const response = await axios.delete(`http://localhost:3004/api/cartItems/${cartId}/${productId}`);
         const data = response.data.cartItems;
         console.log(data);
       } catch (error) {
@@ -67,7 +67,7 @@ function DataProvider({children}:{children: JSX.Element}) {
         quantity: 1,
       }
   
-        const response = await axios.put('http://localhost:3000/api/cartItems', cartItemData);
+        const response = await axios.put('http://localhost:3004/api/cartItems', cartItemData);
         const data = response.data;
         console.log(data);
       } catch (error) {
@@ -79,7 +79,7 @@ function DataProvider({children}:{children: JSX.Element}) {
 
   const getCartItems = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/cartItems`);
+      const response = await axios.get(`http://localhost:3004/api/cartItems`);
       const data = response.data.cartItems;
       const count = data.length;
       // console.log('hna',data);
