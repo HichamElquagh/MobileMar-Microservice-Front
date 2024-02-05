@@ -6,7 +6,6 @@ import { Items } from "../../cartItems";
 
 function cart() {
   const { cartItems, addToCart, removeItem, updateItem, getCartItems } = useContext(DataContext);
-  
 
   const totalPrice = () => {
     let price = 0;
